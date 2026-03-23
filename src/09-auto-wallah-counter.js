@@ -88,28 +88,125 @@
  */
 export function findQueueContainer(element) {
   // Your code here
+  if(!element){
+    return null;
+  }
+  let myelement=element.closest(".queue-container");
+  if(myelement){
+    return myelement;
+  }
+  return null;
 }
 
 export function getNextInQueue(element) {
   // Your code here
+  if(!element){
+    return null;
+  }
+  let myelement=element.nextElementSibling;
+  if(myelement){
+    return myelement;
+  }
+  return null;
 }
 
 export function getPreviousInQueue(element) {
   // Your code here
+  if(!element){
+    return null;
+  }
+  let myelement=element.previousElementSibling;
+  if(myelement){
+    return myelement;
+  }
+  return null;
 }
 
 export function getQueuePosition(element) {
   // Your code here
+
+  if(!element){
+    return -1;
+  }
+  let myparent=element.parentNode;
+  if(!myparent){
+    return -1;
+  }
+  let myelements=myparent.children;
+  for(let i=0;i<myelements.length;i++){
+    if(myelements[i]===element){
+      return i+1;
+    }
+  }
+  return -1;
 }
 
 export function moveToFront(element) {
   // Your code here
+
+if(!element){
+  return false;
+}
+let myparent=element.parentNode;
+if(!myparent){
+  return false;
+}
+let myFirst=myparent.firstElementChild;
+if(myFirst===element){
+  return false;
+}else{
+  myparent.insertBefore(element,myFirst);
+  return true;
+}
 }
 
 export function removeFromQueue(element) {
   // Your code here
+
+ 
+ if(!element){
+  return null;
+ }
+ let myparent=element.parentNode;
+ if(!myparent){
+  return null;
+ }
+ let removedChild = myparent.removeChild(element);
+ return removedChild;
 }
 
 export function getQueueStats(queueContainer) {
   // Your code here
+
+  if(!queueContainer){
+    return null;
+  }
+
+  const children = queueContainer.children;
+
+  let total = children.length;
+  let waiting = 0;
+  let serving = 0;
+  let completed = 0;
+
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
+
+    if (child.classList.contains("waiting")) {
+      waiting++;
+    } else if (child.classList.contains("serving")) {
+      serving++;
+    } else if (child.classList.contains("completed")) {
+      completed++;
+    }
+  }
+
+  return {
+    total,
+    waiting,
+    serving,
+    completed
+  };
+
+  
 }

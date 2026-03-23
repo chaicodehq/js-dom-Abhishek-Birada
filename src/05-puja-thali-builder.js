@@ -59,16 +59,117 @@
  */
 export function setupAddButton(button, thaliElement, itemName) {
   // Your code here
+
+  if(!button || !thaliElement || !itemName){
+    return null;
+  }
+  function create(){
+    let li = document.createElement('li');
+    li.textContent=itemName;
+    thaliElement.appendChild(li);
+  }
+  button.addEventListener("click",create)
+  function clean(){
+    button.removeEventListener("click",create);
+  }
+  return clean;
 }
 
 export function setupRemoveButton(button, thaliElement) {
   // Your code here
+
+  if(!button || !thaliElement){
+    return null;
+  }
+  function handler(){
+    if(thaliElement.lastElementChild){
+      thaliElement.lastElementChild.remove();
+    }
+  }
+  button.addEventListener('click',handler);
+  function clean(){
+    button.removeEventListener('click',handler);
+  }
+  return clean;
 }
 
 export function setupToggleItem(button, thaliElement, itemName) {
   // Your code here
+  if(!button || !thaliElement || !itemName){
+    return null;
+  }
+  function handler(){
+    const items = thaliElement.getElementsByTagName("li");
+
+    let found = null;
+
+    for (let li of items) {
+      if (li.textContent === itemName) {
+        found = li;
+        break;
+      }
+    }
+
+    if (found) {
+      thaliElement.removeChild(found);
+    } else {
+      const li = document.createElement("li");
+      li.textContent = itemName;
+      thaliElement.appendChild(li);
+    }
+  }
+
+  button.addEventListener('click',handler);
+
+  function clean(){
+    button.removeEventListener('click',handler);
+  }
+  return clean;
 }
 
 export function createThaliManager(thaliElement, counterElement) {
-  // Your code here
+  // no
+  if (!thaliElement || !counterElement) {
+    return null;
+  }
+
+  function updateCounter() {
+    counterElement.textContent = thaliElement.children.length;
+  }
+
+  return {
+    addItem(name) {
+      const li = document.createElement("li");
+      li.textContent = name;
+      thaliElement.appendChild(li);
+
+      updateCounter();
+      return li;
+    },
+
+    removeItem(name) {
+      const items = thaliElement.getElementsByTagName("li");
+
+      for (let li of items) {
+        if (li.textContent === name) {
+          li.remove();
+          updateCounter();
+          return true;
+        }
+      }
+
+      return false;
+    },
+
+    getCount() {
+      return thaliElement.children.length;
+    },
+
+    clear() {
+      while (thaliElement.firstChild) {
+        thaliElement.removeChild(thaliElement.firstChild);
+      }
+      updateCounter();
+    }
+  };
 }

@@ -25,11 +25,11 @@
  *      - Agar newDancer null/undefined, return false
  *
  *   2. cloneDancer(dancer, deep)
- *      - Uses cloneNode(deep) to create a copy of dancer element
- *      - If the dancer has an id, appends "-copy" to the clone's id
- *        (e.g., "dancer1" becomes "dancer1-copy")
- *      - Returns the cloned element
- *      - Agar dancer null/undefined, return null
+//  *      - Uses cloneNode(deep) to create a copy of dancer element
+//  *      - If the dancer has an id, appends "-copy" to the clone's id
+//  *        (e.g., "dancer1" becomes "dancer1-copy")
+//  *      - Returns the cloned element
+//  *      - Agar dancer null/undefined, return null
  *
  *   3. replaceDancer(stage, oldDancer, newDancer)
  *      - Uses replaceChild to replace oldDancer with newDancer in stage
@@ -90,24 +90,106 @@
  */
 export function insertDancer(stage, newDancer, referenceDancer) {
   // Your code here
+    if(!stage || !newDancer){
+      return false;
+    }
+    if(!referenceDancer){
+      stage.appendChild(newDancer);
+      return true;
+    }
+    stage.insertBefore(newDancer,referenceDancer);
+    return true;
 }
 
 export function cloneDancer(dancer, deep) {
   // Your code here
+    if(!dancer){
+      return null;
+    }
+    let myNode = dancer.cloneNode(deep);
+    let myid=dancer.getAttribute('id');
+    if(myid){
+      myid += "-copy";
+      myNode.setAttribute('id',myid);
+    }
+
+    return myNode;
+
 }
 
 export function replaceDancer(stage, oldDancer, newDancer) {
   // Your code here
+
+if(!stage || !oldDancer ||!newDancer){
+  return null;
+}
+let replacedChild = stage.replaceChild(newDancer,oldDancer);
+return replacedChild;
 }
 
 export function removeDancer(stage, dancer) {
   // Your code here
+    if(!stage || !dancer){
+      return null;
+    }
+    if (dancer.parentNode !== stage) return null;
+
+  try {
+    return stage.removeChild(dancer);
+  } catch (err) {
+    return null;
+  }
 }
 
 export function rearrangeStage(stage, order) {
   // Your code here
+  if (!stage || !Array.isArray(order)) return false;
+
+  const children = Array.from(stage.children);
+
+  // length mismatch
+  if (order.length !== children.length) return false;
+
+  // validate indices (must be valid and unique)
+  const seen = new Set();
+
+  for (let i = 0; i < order.length; i++) {
+    const idx = order[i];
+
+    if (
+      typeof idx !== "number" ||
+      idx < 0 ||
+      idx >= children.length ||
+      seen.has(idx)
+    ) {
+      return false;
+    }
+
+    seen.add(idx);
+  }
+
+  // remove all children
+  stage.innerHTML = "";
+
+  // re-append in new order
+  order.forEach((i) => {
+    stage.appendChild(children[i]);
+  });
+
+  return true;
 }
 
 export function duplicateFormation(stage) {
   // Your code here
+
+    if(!stage){
+      return null;
+    }
+    let myNode = stage.cloneNode(true);
+    let myid=myNode.getAttribute('id');
+    if(myid){
+      myid += "-clone";
+      myNode.setAttribute('id',myid);
+    }
+    return myNode;
 }
